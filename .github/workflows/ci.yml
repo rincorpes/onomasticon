@@ -16,6 +16,7 @@ jobs:
     with:
       project_name: onomasticon
       lint_path: src/onomasticon
+      run_mypy: true
       python_versions: '["3.10", "3.11", "3.12", "3.13", "3.14"]'
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
