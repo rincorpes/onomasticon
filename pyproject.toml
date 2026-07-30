@@ -1,0 +1,84 @@
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "onomasticon"
+version = "0.1.0"
+description = "Typed, safe, and subclass-isolated implementation registry."
+authors = [
+    { name = "Santiago Rincón", email = "rincorpes@gmail.com" },
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10,<4.0"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest~=8.3",
+    "pytest-cov~=6.0",
+    "black~=24.10",
+    "isort~=5.13",
+    "mypy~=1.5",
+    "pylint~=3.3",
+]
+
+
+[tool.poetry]
+packages = [{ include = "onomasticon", from = "src" }]
+
+[tool.black]
+line-length = 79
+target-version = ["py39"]
+force-exclude = '''(
+^\.venv
+|^venv
+|^env
+|^\.env
+|^build
+|^dist
+|^docs
+)'''
+
+[tool.isort]
+profile = "black"
+line_length = 79
+known_first_party = [
+    "tenon",
+]
+skip = [".venv", "venv", "env", "build", "dist", "docs"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --color=yes"
+
+[tool.mypy]
+python_version = "3.9"
+packages = ["onomasticon"]
+ignore_missing_imports = true
+strict = false
+
+[tool.pylint.messages_control]
+disable = [
+    # Justification: Classes with few public methods are common, specially interfaces,
+    # data containers and base classes.
+    "too-few-public-methods",
+    # Justification: f-strings are preferred for logging.
+    "logging-fstring-interpolation",
+    # Justification: Broad exceptions are sometimes necessary for simplicity.
+    "broad-exception-caught",
+    # Justification: TODOs are acceptable during development.
+    "fixme",
+]
+
+[tool.pylint.MAIN]
+ignore-paths = [
+    "^\\.venv",
+    "^venv",
+    "^tests",
+    "^env",
+    "^build",
+    "^dist",
+    "^docs",
+]
