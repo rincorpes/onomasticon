@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-package:
+    uses: rincorpes/rincorpes-workflows/.github/workflows/python-package-ci.yml@main
+    with:
+      project_name: onomasticon
+      lint_path: src/onomasticon
+      python_versions: '["3.10", "3.11", "3.12", "3.13", "3.14"]'
+    secrets:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+      DISCORD_WEBHOOK_URL_CI: ${{ secrets.DISCORD_WEBHOOK_URL_CI }}
