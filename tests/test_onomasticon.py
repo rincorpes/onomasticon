@@ -4,6 +4,7 @@ from abc import ABC
 
 import pytest
 
+from onomasticon import ImplementationRegistry as PublicImplementationRegistry
 from onomasticon.onomasticon import ImplementationRegistry
 
 
@@ -51,6 +52,10 @@ def test_register_normalizes_name_and_retrieves_implementation() -> None:
     assert AnimalRegistry.get("dog") is Dog
     assert AnimalRegistry.get("DOG") is Dog
     assert AnimalRegistry.contains(" dog ")
+
+
+def test_package_root_exports_implementation_registry() -> None:
+    assert PublicImplementationRegistry is ImplementationRegistry
 
 
 def test_register_rejects_duplicate_name_without_replace() -> None:

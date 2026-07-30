@@ -20,53 +20,55 @@ class ImplementationRegistry(Generic[ImplementationT]):
     ``implementation_base``.
 
     Examples:
-        ```python
-        from abc import ABC, abstractmethod
+        Basic registration.
 
-        from onomasticon import ImplementationRegistry
+        .. code-block:: python
 
+            from abc import ABC, abstractmethod
 
-        class Renderer(ABC):
-            @abstractmethod
-            def render(self, value: str) -> None:
-                \"""Render a value.\"""
+            from onomasticon import ImplementationRegistry
 
 
-        class RendererRegistry(ImplementationRegistry[Renderer]):
-            implementation_base = Renderer
+            class Renderer(ABC):
+                @abstractmethod
+                def render(self, value: str) -> None:
+                    ...
 
 
-        @RendererRegistry.implementation("console")
-        class ConsoleRenderer(Renderer):
-            def render(self, value: str) -> None:
-                print(value)
-        ```
-
-        Then:
-
-        ```python
-        renderer_type = RendererRegistry.get("console")
-        renderer = RendererRegistry.instantiate("console")
-
-        assert renderer_type is ConsoleRenderer
-        assert isinstance(renderer, Renderer)
-        assert RendererRegistry.contains("CONSOLE")
-        ```
-
-        Each registry remains isolated:
-
-        ```python
-        class Exporter(ABC):
-            pass
+            class RendererRegistry(ImplementationRegistry[Renderer]):
+                implementation_base = Renderer
 
 
-        class ExporterRegistry(ImplementationRegistry[Exporter]):
-            implementation_base = Exporter
+            @RendererRegistry.implementation("console")
+            class ConsoleRenderer(Renderer):
+                def render(self, value: str) -> None:
+                    print(value)
+
+        Retrieval.
+
+        .. code-block:: python
+
+            renderer_type = RendererRegistry.get("console")
+            renderer = RendererRegistry.instantiate("console")
+
+            assert renderer_type is ConsoleRenderer
+            assert isinstance(renderer, Renderer)
+            assert RendererRegistry.contains("CONSOLE")
+
+        Registry isolation.
+
+        .. code-block:: python
+
+            class Exporter(ABC):
+                pass
 
 
-        assert RendererRegistry.count() == 1
-        assert ExporterRegistry.count() == 0
-        ```
+            class ExporterRegistry(ImplementationRegistry[Exporter]):
+                implementation_base = Exporter
+
+
+            assert RendererRegistry.count() == 1
+            assert ExporterRegistry.count() == 0
     """
 
     implementation_base: ClassVar[type[Any] | None] = None
