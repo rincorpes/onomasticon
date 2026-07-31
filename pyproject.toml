@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "onomasticon"
-version = "0.1.1"
+version = "0.1.0"
 description = "Typed, safe, and subclass-isolated implementation registry."
 authors = [
     { name = "Santiago Rincón", email = "rincorpes@gmail.com" },
