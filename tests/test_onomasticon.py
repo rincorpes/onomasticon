@@ -1,10 +1,15 @@
 from __future__ import annotations
 
 from abc import ABC
+from importlib import metadata
+from pathlib import Path
 
 import pytest
 
-from onomasticon import ImplementationRegistry as PublicImplementationRegistry
+from onomasticon import (
+    ImplementationRegistry as PublicImplementationRegistry,
+)
+from onomasticon import __version__, get_version
 from onomasticon.onomasticon import ImplementationRegistry
 
 
@@ -56,6 +61,34 @@ def test_register_normalizes_name_and_retrieves_implementation() -> None:
 
 def test_package_root_exports_implementation_registry() -> None:
     assert PublicImplementationRegistry is ImplementationRegistry
+
+
+def test_package_root_exports_version() -> None:
+    assert get_version() == __version__
+
+
+def test_get_version_falls_back_to_pyproject(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pyproject_path = tmp_path / "pyproject.toml"
+    pyproject_path.write_text(
+        '[project]\nname = "onomasticon"\nversion = "9.8.7"\n',
+        encoding="utf-8",
+    )
+
+    def _missing_distribution(_: str) -> str:
+        raise metadata.PackageNotFoundError
+
+    monkeypatch.setattr(metadata, "version", _missing_distribution)
+
+    assert (
+        get_version(
+            pyproject_path=pyproject_path,
+            package_name="onomasticon-test",
+        )
+        == "9.8.7"
+    )
 
 
 def test_register_rejects_duplicate_name_without_replace() -> None:
